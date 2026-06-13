@@ -30,7 +30,6 @@ async function buscarJogador() {
     return;
   }
 
-  // Salvar histórico
   let historico = obterHistorico();
 
   historico.unshift(nome);
