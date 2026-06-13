@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Copa do Mundo 2026</title>
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <header>
+      <h1>Copa do Mundo 2026</h1>
+
+      <div class="busca-container">
+        <input
+          type="text"
+          id="busca"
+          placeholder="Digite o nome do jogador..."
+          onkeypress="if (event.key === 'Enter') buscarJogador();"
+        />
+        <button onclick="buscarJogador()">Buscar</button>
+      </div>
+    </header>
+
+    <main>
+      <section>
+        <h2>Resultados da Busca</h2>
+        <div id="resultados"></div>
+      </section>
+
+      <section>
+        <div class="titulo-secao">
+          <h2>Favoritos</h2>
+          <span id="contadorFavoritos">0 jogadores</span>
+        </div>
+        <div id="favoritos"></div>
+      </section>
+
+      <section>
+        <div class="titulo-secao">
+          <h2>Meu Time</h2>
+          <span id="contadorTime">0 jogadores</span>
+        </div>
+        <div id="meuTime"></div>
+      </section>
+
+      <section>
+        <div class="titulo-secao">
+          <h2>Histórico de Pesquisas</h2>
+          <button id="btnLimparHistorico">Limpar Histórico</button>
+        </div>
+        <ul id="historico"></ul>
+      </section>
+    </main>
+    <script src="script.js"></script>
+  </body>
+</html>
