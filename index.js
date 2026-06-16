@@ -29,10 +29,6 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-/* ==========================
-   MEU TIME
-========================== */
-
 app.get("/meutime", (req, res) => {
   db.query("SELECT * FROM meu_time ORDER BY id DESC", (erro, resultados) => {
     if (erro) {
@@ -88,10 +84,6 @@ app.delete("/meutime/:id", (req, res) => {
     res.send("Jogador removido do time!");
   });
 });
-
-/* ==========================
-   HISTÓRICO
-========================== */
 
 app.get("/historico", (req, res) => {
   db.query(
