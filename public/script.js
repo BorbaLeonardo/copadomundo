@@ -1,3 +1,6 @@
+let meuTime = JSON.parse(localStorage.getItem("meuTime")) || [];
+let historico = JSON.parse(localStorage.getItem("historico")) || [];
+
 async function buscarJogador() {
   const nome = document.getElementById("busca").value.trim();
 
@@ -6,206 +9,183 @@ async function buscarJogador() {
     return;
   }
 
-  await salvarHistorico(nome);
+  salvarHistorico(nome);
 
-  try {
-    const resposta = await fetch(
-      `https://www.thesportsdb.com/api/v1/json/3/searchplayers.php?p=${encodeURIComponent(nome)}`,
-    );
-    const dados = await resposta.json();
+  const resposta = await fetch(
+    `https://www.thesportsdb.com/api/v1/json/3/searchplayers.php?p=${encodeURIComponent(nome)}`,
+  );
 
-    mostrarResultados(dados.player);
-  } catch (erro) {
-    console.log(erro);
-    document.getElementById("resultados").innerHTML =
-      "<p>Erro ao buscar jogadores.</p>";
-  }
+  const dados = await resposta.json();
+
+  mostrarResultados(dados.player);
 }
 
 function mostrarResultados(jogadores) {
   const resultados = document.getElementById("resultados");
+
   resultados.innerHTML = "";
-  if (!jogadores || jogadores.length === 0) {
+
+  if (!jogadores) {
     resultados.innerHTML = "<p>Nenhum jogador encontrado.</p>";
     return;
   }
 
   jogadores.forEach((jogador) => {
     const card = document.createElement("div");
+
     card.className = "card";
-    const foto =
-      jogador.strCutout ||
-      jogador.strThumb ||
-      "https://via.placeholder.com/150";
 
     card.innerHTML = `
-            <img src="${foto}" alt="${jogador.strPlayer}">
+            <img src="${jogador.strCutout || jogador.strThumb || "https://via.placeholder.com/150"}">
+
             <h3>${jogador.strPlayer}</h3>
+
             <p><strong>País:</strong> ${jogador.strNationality || "Não informado"}</p>
+
             <p><strong>Clube:</strong> ${jogador.strTeam || "Sem clube"}</p>
-            <p><strong>Posição:</strong> ${jogador.strPosition || "Não informada"}</p>
-            <button class="btn-favorito">
-                Favoritar
-            </button>
-            <button class="btn-time">
-                Meu Time
+
+            <button onclick='adicionarMeuTime(${JSON.stringify({
+              id: jogador.idPlayer,
+              nome: jogador.strPlayer,
+              foto:
+                jogador.strCutout ||
+                jogador.strThumb ||
+                "https://via.placeholder.com/150",
+            })})'>
+                Adicionar ao Meu Time
             </button>
         `;
-
-    card.querySelector(".btn-favorito").addEventListener("click", () => {
-      favoritar({
-        id: jogador.idPlayer,
-        nome: jogador.strPlayer,
-        clube: jogador.strTeam,
-        pais: jogador.strNationality,
-        foto: foto,
-      });
-    });
-
-    card.querySelector(".btn-time").addEventListener("click", () => {
-      adicionarMeuTime({
-        id: jogador.idPlayer,
-        nome: jogador.strPlayer,
-        posicao: jogador.strPosition,
-        clube: jogador.strTeam,
-        foto: foto,
-      });
-    });
 
     resultados.appendChild(card);
   });
 }
 
-async function salvarHistorico(nome) {
-  await fetch("/historico", {
-    method: "POST",
+function adicionarMeuTime(jogador) {
+  if (meuTime.length >= 11) {
+    alert("Seu time já possui 11 jogadores.");
+    return;
+  }
 
-    headers: {
-      "Content-Type": "application/json",
-    },
+  const existe = meuTime.some((j) => j.id === jogador.id);
 
-    body: JSON.stringify({
-      termo_buscado: nome,
-    }),
+  if (existe) {
+    alert("Este jogador já está no seu time.");
+    return;
+  }
+
+  meuTime.push(jogador);
+
+  salvarMeuTime();
+
+  desenharCampo();
+}
+
+function removerMeuTime(indice) {
+  meuTime.splice(indice, 1);
+
+  salvarMeuTime();
+
+  desenharCampo();
+}
+
+function salvarMeuTime() {
+  localStorage.setItem("meuTime", JSON.stringify(meuTime));
+
+  document.getElementById("contadorMeuTime").textContent = meuTime.length;
+}
+
+function desenharCampo() {
+  const campo = document.getElementById("campo");
+
+  campo.innerHTML = "";
+
+  const formacao = document.getElementById("formacao").value;
+
+  let linhas = [];
+
+  if (formacao === "433") {
+    linhas = [1, 4, 3, 3];
+  }
+
+  if (formacao === "442") {
+    linhas = [1, 4, 4, 2];
+  }
+
+  if (formacao === "352") {
+    linhas = [1, 3, 5, 2];
+  }
+
+  let indiceJogador = 0;
+
+  linhas.forEach((quantidade) => {
+    const linha = document.createElement("div");
+
+    linha.className = "linha";
+
+    for (let i = 0; i < quantidade; i++) {
+      const posicao = document.createElement("div");
+
+      if (indiceJogador < meuTime.length) {
+        const jogador = meuTime[indiceJogador];
+
+        posicao.className = "jogador-campo";
+
+        posicao.innerHTML = `
+                    <img src="${jogador.foto}">
+
+                    <span>${jogador.nome}</span>
+
+                    <button onclick="removerMeuTime(${indiceJogador})">
+                        Remover
+                    </button>
+                `;
+
+        indiceJogador++;
+      } else {
+        posicao.className = "jogador-campo";
+
+        posicao.innerHTML = `
+                    <span>Vazio</span>
+                `;
+      }
+
+      linha.appendChild(posicao);
+    }
+
+    campo.appendChild(linha);
   });
+
+  document.getElementById("contadorMeuTime").textContent = meuTime.length;
+}
+
+function salvarHistorico(nome) {
+  historico.unshift(nome);
+
+  historico = historico.slice(0, 10);
+
+  localStorage.setItem("historico", JSON.stringify(historico));
+
   carregarHistorico();
 }
 
-async function carregarHistorico() {
-  const resposta = await fetch("/historico");
-  const historico = await resposta.json();
+function carregarHistorico() {
   const lista = document.getElementById("historico");
+
   lista.innerHTML = "";
-  historico.forEach((item) => {
+
+  historico.forEach((termo) => {
     const li = document.createElement("li");
-    li.textContent = item.termo_buscado;
+
+    li.textContent = termo;
+
     lista.appendChild(li);
   });
 }
 
-async function limparHistorico() {
-  await fetch("/historico", {
-    method: "DELETE",
-  });
-  carregarHistorico();
-}
-
-async function favoritar(jogador) {
-  await fetch("/favoritos", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(jogador),
-  });
-  carregarFavoritos();
-}
-
-async function carregarFavoritos() {
-  const resposta = await fetch("/favoritos");
-  const favoritos = await resposta.json();
-  const div = document.getElementById("favoritos");
-  div.innerHTML = "";
-  favoritos.forEach((jogador) => {
-    const card = document.createElement("div");
-    card.className = "card";
-    card.innerHTML = `
-            <img src="${jogador.foto || "https://via.placeholder.com/150"}">
-            <h3>${jogador.nome}</h3>
-            <p>${jogador.clube || "Sem clube"}</p>
-            <button onclick="removerFavorito(${jogador.id})">
-                Remover
-            </button>
-        `;
-
-    div.appendChild(card);
-  });
-  atualizarContadorFavoritos(favoritos.length);
-}
-
-async function removerFavorito(id) {
-  await fetch(`/favoritos/${id}`, {
-    method: "DELETE",
-  });
-  carregarFavoritos();
-}
-
-function atualizarContadorFavoritos(total) {
-  document.getElementById("contadorFavoritos").textContent =
-    `${total} jogador(es)`;
-}
-
-async function adicionarMeuTime(jogador) {
-  await fetch("/meutime", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(jogador),
-  });
-  carregarMeuTime();
-}
-
-async function carregarMeuTime() {
-  const resposta = await fetch("/meutime");
-  const jogadores = await resposta.json();
-  const div = document.getElementById("meuTime");
-  div.innerHTML = "";
-
-  jogadores.forEach((jogador) => {
-    const card = document.createElement("div");
-    card.className = "card";
-    card.innerHTML = `
-            <img src="${jogador.foto || "https://via.placeholder.com/150"}">
-            <h3>${jogador.nome}</h3>
-            <p>${jogador.posicao || "Sem posição"}</p>
-            <button onclick="removerMeuTime(${jogador.id})">
-                Remover
-            </button>
-        `;
-
-    div.appendChild(card);
-  });
-  atualizarContadorTime(jogadores.length);
-}
-
-async function removerMeuTime(id) {
-  await fetch(`/meutime/${id}`, {
-    method: "DELETE",
-  });
-  carregarMeuTime();
-}
-
-function atualizarContadorTime(total) {
-  document.getElementById("contadorTime").textContent = `${total} jogador(es)`;
-}
-
 window.onload = function () {
-  carregarFavoritos();
-  carregarMeuTime();
+  document.getElementById("contadorMeuTime").textContent = meuTime.length;
+
   carregarHistorico();
 
-  document
-    .getElementById("btnLimparHistorico")
-    .addEventListener("click", limparHistorico);
+  desenharCampo();
 };
