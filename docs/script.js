@@ -22,7 +22,6 @@ async function buscarJogador() {
 
 function mostrarResultados(jogadores) {
   const resultados = document.getElementById("resultados");
-
   resultados.innerHTML = "";
 
   if (!jogadores) {
@@ -32,9 +31,7 @@ function mostrarResultados(jogadores) {
 
   jogadores.forEach((jogador) => {
     const card = document.createElement("div");
-
     card.className = "card";
-
     card.innerHTML = `
             <img src="${jogador.strCutout || jogador.strThumb || "https://via.placeholder.com/150"}">
 
@@ -76,33 +73,26 @@ function adicionarMeuTime(jogador) {
   meuTime.push(jogador);
 
   salvarMeuTime();
-
   desenharCampo();
 }
 
 function removerMeuTime(indice) {
   meuTime.splice(indice, 1);
-
   salvarMeuTime();
-
   desenharCampo();
 }
 
 function salvarMeuTime() {
   localStorage.setItem("meuTime", JSON.stringify(meuTime));
-
   document.getElementById("contadorMeuTime").textContent = meuTime.length;
 }
 
 function desenharCampo() {
   const campo = document.getElementById("campo");
-
   campo.innerHTML = "";
-
   const formacao = document.getElementById("formacao").value;
 
   let linhas = [];
-
   if (formacao === "433") {
     linhas = [1, 4, 3, 3];
   }
@@ -119,22 +109,17 @@ function desenharCampo() {
 
   linhas.forEach((quantidade) => {
     const linha = document.createElement("div");
-
     linha.className = "linha";
 
     for (let i = 0; i < quantidade; i++) {
       const posicao = document.createElement("div");
-
       if (indiceJogador < meuTime.length) {
         const jogador = meuTime[indiceJogador];
 
         posicao.className = "jogador-campo";
-
         posicao.innerHTML = `
                     <img src="${jogador.foto}">
-
                     <span>${jogador.nome}</span>
-
                     <button onclick="removerMeuTime(${indiceJogador})">
                         Remover
                     </button>
@@ -143,7 +128,6 @@ function desenharCampo() {
         indiceJogador++;
       } else {
         posicao.className = "jogador-campo";
-
         posicao.innerHTML = `
                     <span>Vazio</span>
                 `;
@@ -151,7 +135,6 @@ function desenharCampo() {
 
       linha.appendChild(posicao);
     }
-
     campo.appendChild(linha);
   });
 
@@ -160,7 +143,6 @@ function desenharCampo() {
 
 function salvarHistorico(nome) {
   historico.unshift(nome);
-
   historico = historico.slice(0, 10);
 
   localStorage.setItem("historico", JSON.stringify(historico));
@@ -170,14 +152,11 @@ function salvarHistorico(nome) {
 
 function carregarHistorico() {
   const lista = document.getElementById("historico");
-
   lista.innerHTML = "";
 
   historico.forEach((termo) => {
     const li = document.createElement("li");
-
     li.textContent = termo;
-
     lista.appendChild(li);
   });
 }
@@ -186,6 +165,5 @@ window.onload = function () {
   document.getElementById("contadorMeuTime").textContent = meuTime.length;
 
   carregarHistorico();
-
   desenharCampo();
 };
