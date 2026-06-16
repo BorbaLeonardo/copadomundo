@@ -29,61 +29,9 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-app.get("/favoritos", (req, res) => {
-  db.query("SELECT * FROM favoritos ORDER BY id DESC", (erro, resultados) => {
-    if (erro) {
-      console.log(erro);
-      return res.status(500).send(erro);
-    }
-
-    res.json(resultados);
-  });
-});
-
-app.post("/favoritos", (req, res) => {
-  const { id, nome, clube, pais, foto } = req.body;
-
-  db.query(
-    "SELECT * FROM favoritos WHERE jogador_id = ?",
-    [id],
-    (erro, resultados) => {
-      if (erro) {
-        console.log(erro);
-        return res.status(500).send(erro);
-      }
-
-      if (resultados.length > 0) {
-        return res.send("Jogador já está nos favoritos.");
-      }
-
-      const sql = `
-        INSERT INTO favoritos
-        (jogador_id, nome, clube, pais, foto)
-        VALUES (?, ?, ?, ?, ?)
-      `;
-
-      db.query(sql, [id, nome, clube, pais, foto], (erro) => {
-        if (erro) {
-          console.log(erro);
-          return res.status(500).send(erro);
-        }
-
-        res.send("Favorito salvo!");
-      });
-    },
-  );
-});
-
-app.delete("/favoritos/:id", (req, res) => {
-  db.query("DELETE FROM favoritos WHERE id = ?", [req.params.id], (erro) => {
-    if (erro) {
-      console.log(erro);
-      return res.status(500).send(erro);
-    }
-
-    res.send("Favorito removido!");
-  });
-});
+/* ==========================
+   MEU TIME
+========================== */
 
 app.get("/meutime", (req, res) => {
   db.query("SELECT * FROM meu_time ORDER BY id DESC", (erro, resultados) => {
@@ -97,7 +45,7 @@ app.get("/meutime", (req, res) => {
 });
 
 app.post("/meutime", (req, res) => {
-  const { id, nome, posicao, clube, foto } = req.body;
+  const { id, nome, foto } = req.body;
 
   db.query(
     "SELECT * FROM meu_time WHERE jogador_id = ?",
@@ -113,12 +61,12 @@ app.post("/meutime", (req, res) => {
       }
 
       const sql = `
-        INSERT INTO meu_time
-        (jogador_id, nome, posicao, clube, foto)
-        VALUES (?, ?, ?, ?, ?)
-      `;
+                INSERT INTO meu_time
+                (jogador_id, nome, foto)
+                VALUES (?, ?, ?)
+            `;
 
-      db.query(sql, [id, nome, posicao, clube, foto], (erro) => {
+      db.query(sql, [id, nome, foto], (erro) => {
         if (erro) {
           console.log(erro);
           return res.status(500).send(erro);
@@ -140,6 +88,10 @@ app.delete("/meutime/:id", (req, res) => {
     res.send("Jogador removido do time!");
   });
 });
+
+/* ==========================
+   HISTÓRICO
+========================== */
 
 app.get("/historico", (req, res) => {
   db.query(
