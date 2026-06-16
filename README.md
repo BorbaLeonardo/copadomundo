@@ -2,7 +2,7 @@
 
 Projeto final desenvolvido para a disciplina de Desenvolvimento Web.
 
-O sistema permite pesquisar jogadores de futebol utilizando a API TheSportsDB, visualizar suas informações, adicioná-los aos favoritos, montar um time personalizado e manter um histórico das pesquisas realizadas.
+O sistema permite pesquisar jogadores de futebol utilizando a API TheSportsDB, visualizar suas informações, montar um time personalizado de 11 jogadores e organizá-los em diferentes formações táticas, além de manter um histórico das pesquisas realizadas.
 
 ---
 
@@ -27,16 +27,19 @@ Desenvolver uma aplicação web funcional utilizando os conceitos estudados dura
   * Nome;
   * Nacionalidade;
   * Clube atual;
-  * Posição;
   * Foto do atleta;
- 
-* Adicionar jogadores aos Favoritos;
-* Remover jogadores dos Favoritos;
-* Montar o "Meu Time" com os jogadores escolhidos;
+* Adicionar jogadores ao "Meu Time";
+* Montar um elenco com até 11 jogadores;
+* Visualizar os jogadores em um campo tático;
+* Alternar entre as formações:
+
+  * 4-3-3;
+  * 4-4-2;
+  * 3-5-2;
 * Remover jogadores do Meu Time;
 * Registrar o histórico das pesquisas realizadas;
-* Limpar o histórico de pesquisas;
-* Atualizar automaticamente os contadores de Favoritos e Meu Time.
+* Exibir contador de jogadores adicionados ao time;
+* Utilizar armazenamento local na versão publicada do sistema.
 
 ---
 
@@ -50,6 +53,7 @@ Desenvolver uma aplicação web funcional utilizando os conceitos estudados dura
 * MySQL
 * API TheSportsDB
 * Git e GitHub
+* LocalStorage
 
 ---
 
@@ -57,25 +61,22 @@ Desenvolver uma aplicação web funcional utilizando os conceitos estudados dura
 
 copadomundo/
 
+├── docs/
+│   ├── index.html
+│   ├── style.css
+│   └── script.js
+│
+├── public/
+│   ├── index.html
+│   ├── style.css
+│   └── script.js
+│
 ├── index.js
-
 ├── package.json
-
 ├── package-lock.json
-
 ├── script.sql
-
 ├── README.md
-
-├── .gitignore
-
-└── public/
-
-    ├── index.html
-
-    ├── style.css
-
-    └── script.js
+└── .gitignore
 
 ---
 
@@ -99,7 +100,7 @@ Abra o MySQL Workbench e execute o arquivo:
 
 script.sql
 
-Esse arquivo criará o banco de dados `copadomundo` e todas as tabelas necessárias para o funcionamento do sistema.
+Esse arquivo criará o banco de dados `copadomundo` e as tabelas necessárias para o funcionamento do sistema.
 
 ### 5. Inicie o servidor
 
@@ -119,7 +120,6 @@ copadomundo
 
 As tabelas utilizadas são:
 
-* favoritos
 * meu_time
 * historico
 
@@ -137,3 +137,12 @@ A API foi utilizada para realizar a busca dos jogadores e exibir suas informaç�
 
 ---
 
+## Versão Publicada
+
+A versão publicada do projeto utiliza GitHub Pages e faz uso do LocalStorage para manter os dados do Meu Time e do Histórico de Pesquisas diretamente no navegador do usuário.
+
+---
+
+## Considerações Finais
+
+Este projeto foi desenvolvido com o objetivo de aplicar, na prática, os principais conceitos abordados durante a disciplina, como manipulação do DOM, eventos em JavaScript, consumo de APIs, persistência de dados e construção de interfaces responsivas e organizadas.
