@@ -1,13 +1,13 @@
 body {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
-  background-color: #f5f5f5;
+  background: linear-gradient(135deg, #1cb9e4, #0a3282);
   color: #333;
 }
 
 header {
-  background: linear-gradient(135deg, #e6c42d, #fbe756);
-  color: white;
+  background: linear-gradient(135deg, #1f8b43, #1b7a3b);
+  color: #fbe756;
   padding: 30px 20px;
   text-align: center;
 }
@@ -21,6 +21,7 @@ header h1 {
   justify-content: center;
   gap: 10px;
   flex-wrap: wrap;
+  color: white;
 }
 
 .busca-container input {
@@ -29,21 +30,23 @@ header h1 {
   padding: 12px;
   border: none;
   border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
 }
 
 .busca-container button {
   padding: 12px 20px;
   border: none;
   border-radius: 8px;
-  background-color: #ffd700;
+  background-color: #ffffff;
   font-weight: bold;
   cursor: pointer;
   transition: 0.3s;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
 }
 
 .busca-container button:hover {
   transform: translateY(-2px);
-  background-color: #ffca28;
+  background-color: #fbe756;
 }
 
 main {
@@ -61,13 +64,40 @@ section {
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
+  gap: 15px;
   margin-bottom: 20px;
+  color: white;
+}
+
+.grupo-formacao {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.grupo-formacao label {
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+}
+
+#formacao {
+  padding: 12px 20px;
+  font-size: 20px;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  min-width: 130px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
 }
 
 #resultados {
   display: grid;
+  border-radius: 12px;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 20px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
 }
 
 .card {
@@ -98,7 +128,6 @@ section {
   background-color: #0b8f3f;
   color: white;
   cursor: pointer;
-
   transition: 0.3s;
 }
 
@@ -133,7 +162,7 @@ section {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
   transition: 0.3s;
 }
 
@@ -170,7 +199,7 @@ section {
   border-radius: 12px;
   padding: 20px;
   list-style: none;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 #historico li {
